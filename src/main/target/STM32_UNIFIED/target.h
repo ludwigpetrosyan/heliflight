@@ -23,9 +23,7 @@
 #if defined(STM32F405)
 #define TARGET_BOARD_IDENTIFIER "S405"
 
-#define USBD_PRODUCT_STRING     "Heliflight STM32F405"
-
-#define USE_ACCGYRO_BMI270
+#define USBD_PRODUCT_STRING     "Betaflight STM32F405"
 
 #define USE_I2C_DEVICE_1
 #define USE_I2C_DEVICE_2
@@ -56,7 +54,7 @@
 #elif defined(STM32F411)
 #define TARGET_BOARD_IDENTIFIER "S411"
 
-#define USBD_PRODUCT_STRING     "Heliflight STM32F411"
+#define USBD_PRODUCT_STRING     "Betaflight STM32F411"
 
 #define USE_I2C_DEVICE_1
 #define USE_I2C_DEVICE_2
@@ -83,7 +81,7 @@
 #elif defined(STM32F7X2)
 #define TARGET_BOARD_IDENTIFIER "S7X2"
 
-#define USBD_PRODUCT_STRING     "Heliflight STM32F7x2"
+#define USBD_PRODUCT_STRING     "Betaflight STM32F7x2"
 
 #define USE_I2C_DEVICE_1
 #define USE_I2C_DEVICE_2
@@ -112,9 +110,7 @@
 #elif defined(STM32F745)
 #define TARGET_BOARD_IDENTIFIER "S745"
 
-#define USBD_PRODUCT_STRING     "Heliflight STM32F745"
-
-#define USE_ACCGYRO_BMI270
+#define USBD_PRODUCT_STRING     "Betaflight STM32F745"
 
 #define USE_I2C_DEVICE_1
 #define USE_I2C_DEVICE_2
@@ -159,8 +155,6 @@
 #define USE_ACC
 #define USE_GYRO
 
-#define USE_ACC_MPU6050
-#define USE_GYRO_MPU6050
 #define USE_ACC_MPU6500
 #define USE_GYRO_MPU6500
 #define USE_ACC_SPI_MPU6000
@@ -169,6 +163,7 @@
 #define USE_GYRO_SPI_MPU6500
 #define USE_ACC_SPI_ICM20689
 #define USE_GYRO_SPI_ICM20689
+#define USE_ACCGYRO_LSM6DSO
 
 #define USE_MAG
 #define USE_MAG_DATA_READY_SIGNAL
@@ -177,7 +172,9 @@
 #define USE_MAG_QMC5883
 #define USE_MAG_LIS3MDL
 #define USE_MAG_AK8963
+#define USE_MAG_MPU925X_AK8963
 #define USE_MAG_SPI_AK8963
+#define USE_MAG_AK8975
 
 #define USE_BARO
 #define USE_BARO_MS5611
@@ -190,6 +187,8 @@
 #define USE_BARO_SPI_LPS
 #define USE_BARO_QMP6988
 #define USE_BARO_SPI_QMP6988
+#define USE_BARO_DPS310
+#define USE_BARO_SPI_DPS310
 
 #define USE_SDCARD
 #define USE_SDCARD_SPI
@@ -204,6 +203,11 @@
 #define USE_FLASH_W25M02G          // 2Gb (1Gb x 2 stacked) NAND flash support
 
 #define USE_MAX7456
+
+#define USE_VTX_RTC6705
+#define USE_VTX_RTC6705_SOFTSPI
+
+#define USE_TRANSPONDER
 
 #define USE_RANGEFINDER
 #define USE_RANGEFINDER_HCSR04
@@ -228,8 +232,6 @@
 
 #define USE_ADC
 
-#define USE_FREQ_SENSOR
-
 #define USE_RX_SPI
 
 #define USE_RX_FRSKY_SPI_D
@@ -243,10 +245,16 @@
 #define USE_RX_FLYSKY
 #define USE_RX_FLYSKY_SPI_LED
 
+#define USE_RX_SPEKTRUM
+#define USE_RX_SPEKTRUM_TELEMETRY
+
 #define USE_CUSTOM_DEFAULTS
 
-// HF3D: Not needed
-#undef  USE_CMS
-#undef  USE_OSD
-#undef  USE_MAX7456
+// Additional drivers included for targets with > 512KB of flash
+#if (TARGET_FLASH_SIZE > 512)
+#define USE_ACC_MPU6050
+#define USE_GYRO_MPU6050
+#define USE_ACCGYRO_BMI270
 
+#define USE_BARO_BMP085
+#endif

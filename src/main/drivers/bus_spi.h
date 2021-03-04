@@ -160,6 +160,7 @@ void spiBusWriteRegisterBuffer(const busDevice_t *bus, uint8_t reg, const uint8_
 uint8_t spiBusRawReadRegister(const busDevice_t *bus, uint8_t reg);
 uint8_t spiBusReadRegister(const busDevice_t *bus, uint8_t reg);
 void spiBusSetInstance(busDevice_t *bus, SPI_TypeDef *instance);
+uint16_t spiCalculateDivider(uint32_t freq);
 void spiBusSetDivisor(busDevice_t *bus, SPIClockDivider_e divider);
 
 void spiBusTransactionInit(busDevice_t *bus, SPIMode_e mode, SPIClockDivider_e divider);
@@ -177,3 +178,5 @@ bool spiBusTransactionTransfer(const busDevice_t *bus, const uint8_t *txData, ui
 
 struct spiPinConfig_s;
 void spiPinConfigure(const struct spiPinConfig_s *pConfig);
+void spiBusDeviceRegister(const busDevice_t *bus);
+uint8_t spiGetRegisteredDeviceCount(void);
