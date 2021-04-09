@@ -131,6 +131,10 @@ void mixerUpdate(void)
         mixerInput[MIXER_IN_STABILIZED_ROLL]  = mixerInput[MIXER_IN_RCCMD_ROLL];
         mixerInput[MIXER_IN_STABILIZED_PITCH] = mixerInput[MIXER_IN_RCCMD_PITCH];
         mixerInput[MIXER_IN_STABILIZED_YAW]   = mixerInput[MIXER_IN_RCCMD_YAW];
+    } else if (FLIGHT_MODE(ANGLE_MODE)) {
+    	mixerInput[MIXER_IN_STABILIZED_ROLL]  = mixerInput[MIXER_IN_RCCMD_ROLL];
+		mixerInput[MIXER_IN_STABILIZED_PITCH] = mixerInput[MIXER_IN_RCCMD_PITCH];
+		mixerInput[MIXER_IN_STABILIZED_YAW]   = pidData[FD_YAW].SumLim   * MIXER_PID_SCALING;
     } else {
         mixerInput[MIXER_IN_STABILIZED_ROLL]  = pidData[FD_ROLL].SumLim  * MIXER_PID_SCALING;
         mixerInput[MIXER_IN_STABILIZED_PITCH] = pidData[FD_PITCH].SumLim * MIXER_PID_SCALING;

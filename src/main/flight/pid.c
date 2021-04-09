@@ -72,6 +72,7 @@ typedef enum {
     LEVEL_MODE_OFF = 0,
     LEVEL_MODE_R,
     LEVEL_MODE_RP,
+	LEVEL_MODE_Y,
 } levelMode_e;
 
 const char pidNames[] =
@@ -853,7 +854,7 @@ static FAST_CODE_NOINLINE float applyAcroTrainer(int axis, const rollAndPitchTri
 {
     float ret = setPoint;
 
-    if (!FLIGHT_MODE(RESCUE_MODE) && !FLIGHT_MODE(HORIZON_MODE) && !FLIGHT_MODE(GPS_RESCUE_MODE)) {
+    if (!FLIGHT_MODE(RESCUE_MODE) && !FLIGHT_MODE(HORIZON_MODE) && !FLIGHT_MODE(GPS_RESCUE_MODE) && !FLIGHT_MODE(ANGLE_MODE)) {
         bool resetIterm = false;
         float projectedAngle = 0;
         const int setpointSign = acroTrainerSign(setPoint);
@@ -1200,7 +1201,7 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
 #if defined(USE_ACC)
     const bool gpsRescueIsActive = FLIGHT_MODE(GPS_RESCUE_MODE);
     levelMode_e levelMode;
-    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || gpsRescueIsActive) {
+    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(ANGLE_MODE) || gpsRescueIsActive) {
         levelMode = LEVEL_MODE_RP;
     } else {
         levelMode = LEVEL_MODE_OFF;
@@ -1256,19 +1257,24 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
         // Yaw control is GYRO based, direct sticks control is applied to rate PID
 #if defined(USE_ACC)
         switch (levelMode) {
-        case LEVEL_MODE_OFF:
-            break;
-        case LEVEL_MODE_R:
-            if (axis == FD_PITCH)
-                break;
-            FALLTHROUGH;
-        case LEVEL_MODE_RP:
-            if (axis == FD_YAW) {
-                // HF3D:  No yaw input while corrections are occuring
-                currentPidSetpoint = 0.0f;
-                break;
-            }
-            currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+			case LEVEL_MODE_OFF:
+				break;
+			case LEVEL_MODE_R:
+				if (axis == FD_PITCH)
+					break;
+				FALLTHROUGH;
+			case LEVEL_MODE_RP:
+				// My
+				if (FLIGHT_MODE(ANGLE_MODE)) {
+					break;
+				}
+				//if ((axis == FD_YAW) && !FLIGHT_MODE(ANGLE_MODE)) {
+				if (axis == FD_YAW) {
+					// HF3D:  No yaw input while corrections are occuring
+					currentPidSetpoint = 0.0f;
+					break;
+				}
+				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
         }
 #endif
 

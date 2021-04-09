@@ -292,6 +292,8 @@ void crsfFrameFlightMode(sbuf_t *dst)
         flightMode = "RESC";
     } else if (FLIGHT_MODE(HORIZON_MODE)) {
         flightMode = "HOR";
+    } else if (FLIGHT_MODE(ANGLE_MODE)) {
+        flightMode = "ANGL";
     }
 
     sbufWriteString(dst, flightMode);

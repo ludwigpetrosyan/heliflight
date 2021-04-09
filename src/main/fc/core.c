@@ -166,6 +166,7 @@ static bool accNeedsCalibration(void)
             isModeActivationConditionPresent(BOXHORIZON) ||
             isModeActivationConditionPresent(BOXGPSRESCUE) ||
             isModeActivationConditionPresent(BOXCALIB) ||
+			isModeActivationConditionPresent(BOXANGLE) ||
             isModeActivationConditionPresent(BOXACROTRAINER)) {
 
             return true;
@@ -622,10 +623,12 @@ bool processRx(timeUs_t currentTimeUs)
     }
 
     bool canUseHorizonMode = true;
+    bool canUseAngleMode = true;
 
     if ((IS_RC_MODE_ACTIVE(BOXRESCUE) || failsafeIsActive()) && (sensors(SENSOR_ACC))) {
         // bumpless transfer to Level mode
         canUseHorizonMode = false;
+        canUseAngleMode = false;
 
         if (!FLIGHT_MODE(RESCUE_MODE)) {
             ENABLE_FLIGHT_MODE(RESCUE_MODE);
@@ -637,6 +640,7 @@ bool processRx(timeUs_t currentTimeUs)
     if (IS_RC_MODE_ACTIVE(BOXHORIZON) && canUseHorizonMode) {
 
         DISABLE_FLIGHT_MODE(RESCUE_MODE);
+        DISABLE_FLIGHT_MODE(ANGLE_MODE);
 
         if (!FLIGHT_MODE(HORIZON_MODE)) {
             ENABLE_FLIGHT_MODE(HORIZON_MODE);
@@ -644,6 +648,18 @@ bool processRx(timeUs_t currentTimeUs)
     } else {
         DISABLE_FLIGHT_MODE(HORIZON_MODE);
     }
+
+    if (IS_RC_MODE_ACTIVE(BOXANGLE) && canUseAngleMode) {
+
+            DISABLE_FLIGHT_MODE(RESCUE_MODE);
+            DISABLE_FLIGHT_MODE(HORIZON_MODE);
+
+            if (!FLIGHT_MODE(ANGLE_MODE)) {
+                ENABLE_FLIGHT_MODE(ANGLE_MODE);
+            }
+        } else {
+            DISABLE_FLIGHT_MODE(ANGLE_MODE);
+        }
 
 #ifdef USE_GPS_RESCUE
     if (ARMING_FLAG(ARMED) && (IS_RC_MODE_ACTIVE(BOXGPSRESCUE) || (failsafeIsActive() && failsafeConfig()->failsafe_procedure == FAILSAFE_PROCEDURE_GPS_RESCUE))) {
@@ -655,7 +671,7 @@ bool processRx(timeUs_t currentTimeUs)
     }
 #endif
 
-    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE)) {
+    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(ANGLE_MODE)) {
         LED1_ON;
         // increase frequency of attitude task to reduce drift when in angle or horizon mode
         rescheduleTask(TASK_ATTITUDE, TASK_PERIOD_HZ(500));

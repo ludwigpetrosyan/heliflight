@@ -776,7 +776,9 @@ static void osdElementFlymode(osdElementParms_t *element)
         strcpy(element->buff, "GRSC");
     } else if (FLIGHT_MODE(RESCUE_MODE)) {
         strcpy(element->buff, "RESC");
-    } else if (FLIGHT_MODE(HORIZON_MODE)) {
+    }else if (FLIGHT_MODE(ANGLE_MODE)) {
+        strcpy(element->buff, "ANGL");
+    }else if (FLIGHT_MODE(HORIZON_MODE)) {
         strcpy(element->buff, "HOR ");
     } else if (IS_RC_MODE_ACTIVE(BOXACROTRAINER)) {
         strcpy(element->buff, "ATRN");

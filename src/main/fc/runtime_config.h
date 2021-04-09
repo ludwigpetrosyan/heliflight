@@ -78,16 +78,16 @@ bool isArmingDisabled(void);
 armingDisableFlags_e getArmingDisableFlags(void);
 
 typedef enum {
-    RESCUE_MODE      = (1 << 0),
+    RESCUE_MODE     = (1 << 0),
     HORIZON_MODE    = (1 << 1),
-//    MAG_MODE        = (1 << 2),
-//    BARO_MODE       = (1 << 3),
-//    GPS_HOME_MODE   = (1 << 4),
-//    GPS_HOLD_MODE   = (1 << 5),
-//    HEADFREE_MODE   = (1 << 6),
-//    UNUSED_MODE     = (1 << 7), // old autotune
+    MAG_MODE        = (1 << 2),
+    BARO_MODE       = (1 << 3),
+    GPS_HOME_MODE   = (1 << 4),
+    GPS_HOLD_MODE   = (1 << 5),
+    HEADFREE_MODE   = (1 << 6),
+    ANGLE_MODE      = (1 << 7), // add angle mode
     PASSTHRU_MODE   = (1 << 8),
-//    RANGEFINDER_MODE= (1 << 9),
+    RANGEFINDER_MODE= (1 << 9),
     FAILSAFE_MODE   = (1 << 10),
     GPS_RESCUE_MODE = (1 << 11)
 } flightModeFlags_e;
@@ -106,6 +106,7 @@ extern uint16_t flightModeFlags;
    [BOXPASSTHRU]    = LOG2(PASSTHRU_MODE),               \
    [BOXFAILSAFE]    = LOG2(FAILSAFE_MODE),               \
    [BOXGPSRESCUE]   = LOG2(GPS_RESCUE_MODE),             \
+   [BOXANGLE]       = LOG2(ANGLE_MODE),                  \
 }                                                        \
 /**/
 

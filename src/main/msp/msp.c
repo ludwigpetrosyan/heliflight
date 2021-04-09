@@ -2757,9 +2757,11 @@ static mspResult_e mspProcessInCommand(mspDescriptor_t srcDesc, int16_t cmdMSP, 
         break;
 
     case MSP_SET_MIXER_CONFIG:
-        sbufReadU8(src); // was mixerConfigMutable()->mixerMode
-        sbufReadU8(src); // was mixerConfigMutable()->yaw_motors_reversed
-        sbufReadData(src, mixerRulesMutable(0), sizeof(mixer_t) * MIXER_RULE_COUNT);
+    	//commented, configurator has no heliflight mixer rules set possibility
+
+        //sbufReadU8(src); // was mixerConfigMutable()->mixerMode
+        //sbufReadU8(src); // was mixerConfigMutable()->yaw_motors_reversed
+        //sbufReadData(src, mixerRulesMutable(0), sizeof(mixer_t) * MIXER_RULE_COUNT);
         break;
 
     case MSP_SET_MIXER_OVERRIDE:

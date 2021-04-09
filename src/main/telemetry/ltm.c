@@ -178,6 +178,8 @@ static void ltm_sframe(void)
         lt_flightmode = 2;
     else if (FLIGHT_MODE(HORIZON_MODE))
         lt_flightmode = 3;
+    else if (FLIGHT_MODE(ANGLE_MODE))
+            lt_flightmode = 2;
     else
         lt_flightmode = 1;      // Rate mode
 

@@ -763,6 +763,9 @@ void processSmartPortTelemetry(smartPortPayload_t *payload, volatile bool *clear
                 if (FLIGHT_MODE(PASSTHRU_MODE)) {
                     tmpi += 40;
                 }
+                if (FLIGHT_MODE(ANGLE_MODE)) {
+                    tmpi += 30;
+                }
 
                 smartPortSendPackage(id, (uint32_t)tmpi);
                 *clearToSend = false;
