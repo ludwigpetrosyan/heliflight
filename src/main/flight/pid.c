@@ -73,6 +73,10 @@ typedef enum {
     LEVEL_MODE_R,
     LEVEL_MODE_RP,
 	LEVEL_MODE_Y,
+	LEVEL_MODE_P,
+	LEVEL_MODE_RPY,
+	LEVEL_MODE_RSC,
+	LEVEL_MODE_GRSC,
 } levelMode_e;
 
 const char pidNames[] =
@@ -1201,11 +1205,30 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
 #if defined(USE_ACC)
     const bool gpsRescueIsActive = FLIGHT_MODE(GPS_RESCUE_MODE);
     levelMode_e levelMode;
+
+    //if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(ANGLE_MODE) || gpsRescueIsActive) {
+    //    levelMode = LEVEL_MODE_RP;
+    //} else {
+    //    levelMode = LEVEL_MODE_OFF;
+    //}
+
     if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(ANGLE_MODE) || gpsRescueIsActive) {
-        levelMode = LEVEL_MODE_RP;
+		if(FLIGHT_MODE(RESCUE_MODE)){
+			levelMode = LEVEL_MODE_RSC;
+		} else if(FLIGHT_MODE(HORIZON_MODE)){
+			levelMode = LEVEL_MODE_RPY;
+		} else if(FLIGHT_MODE(ANGLE_MODE)){
+			levelMode = LEVEL_MODE_Y;
+		} else if(gpsRescueIsActive){
+			levelMode = LEVEL_MODE_GRSC;
+		}
+
     } else {
-        levelMode = LEVEL_MODE_OFF;
-    }
+		levelMode = LEVEL_MODE_OFF;
+	}
+
+
+
 
     // Keep track of when we entered a self-level mode so that we can
     // add a guard time before crash recovery can activate.
@@ -1260,21 +1283,42 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
 			case LEVEL_MODE_OFF:
 				break;
 			case LEVEL_MODE_R:
-				if (axis == FD_PITCH)
-					break;
-				FALLTHROUGH;
-			case LEVEL_MODE_RP:
-				// My
-				if (FLIGHT_MODE(ANGLE_MODE)) {
+				if (axis == FD_PITCH){
+					//currentPidSetpoint = 0.0f;
 					break;
 				}
-				//if ((axis == FD_YAW) && !FLIGHT_MODE(ANGLE_MODE)) {
-				if (axis == FD_YAW) {
-					// HF3D:  No yaw input while corrections are occuring
-					currentPidSetpoint = 0.0f;
+				if (axis == FD_YAW){ //ANGLE_MODE
+					//currentPidSetpoint = 0.0f;
 					break;
 				}
 				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+				break;
+			case LEVEL_MODE_Y:
+				if (axis == FD_PITCH){
+					//currentPidSetpoint = 0.0f;
+					currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+					break;
+				}
+				if (axis == FD_ROLL){
+					//currentPidSetpoint = 0.0f;
+					currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+					break;
+				}
+				//currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+				break;
+			case LEVEL_MODE_RPY: //HORIZON_MODE
+			case LEVEL_MODE_RSC: //LEVEL_MODE_RSC
+			case LEVEL_MODE_GRSC:
+				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+				break;
+			case LEVEL_MODE_RP:
+				if (axis == FD_YAW) {
+					// HF3D:  No yaw input while corrections are occuring
+					//currentPidSetpoint = 0.0f;
+					break;
+				}
+				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+				break;
         }
 #endif
 

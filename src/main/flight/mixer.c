@@ -127,7 +127,7 @@ void mixerUpdate(void)
 
     mixerInput[MIXER_IN_RCCMD_THROTTLE]   = (rcCommand[THROTTLE] - MIXER_THR_OFFSET) * MIXER_THR_SCALING;
 
-    if (FLIGHT_MODE(PASSTHRU_MODE)) {
+    /*if (FLIGHT_MODE(PASSTHRU_MODE)) {
         mixerInput[MIXER_IN_STABILIZED_ROLL]  = mixerInput[MIXER_IN_RCCMD_ROLL];
         mixerInput[MIXER_IN_STABILIZED_PITCH] = mixerInput[MIXER_IN_RCCMD_PITCH];
         mixerInput[MIXER_IN_STABILIZED_YAW]   = mixerInput[MIXER_IN_RCCMD_YAW];
@@ -139,7 +139,17 @@ void mixerUpdate(void)
         mixerInput[MIXER_IN_STABILIZED_ROLL]  = pidData[FD_ROLL].SumLim  * MIXER_PID_SCALING;
         mixerInput[MIXER_IN_STABILIZED_PITCH] = pidData[FD_PITCH].SumLim * MIXER_PID_SCALING;
         mixerInput[MIXER_IN_STABILIZED_YAW]   = pidData[FD_YAW].SumLim   * MIXER_PID_SCALING;
-    }
+    }*/
+
+    if (FLIGHT_MODE(PASSTHRU_MODE)) {
+		mixerInput[MIXER_IN_STABILIZED_ROLL]  = mixerInput[MIXER_IN_RCCMD_ROLL];
+		mixerInput[MIXER_IN_STABILIZED_PITCH] = mixerInput[MIXER_IN_RCCMD_PITCH];
+		mixerInput[MIXER_IN_STABILIZED_YAW]   = mixerInput[MIXER_IN_RCCMD_YAW];
+	} else {
+		mixerInput[MIXER_IN_STABILIZED_ROLL]  = pidData[FD_ROLL].SumLim  * MIXER_PID_SCALING;
+		mixerInput[MIXER_IN_STABILIZED_PITCH] = pidData[FD_PITCH].SumLim * MIXER_PID_SCALING;
+		mixerInput[MIXER_IN_STABILIZED_YAW]   = pidData[FD_YAW].SumLim   * MIXER_PID_SCALING;
+	}
 
     mixerInput[MIXER_IN_STABILIZED_THROTTLE]   = mixerInput[MIXER_IN_RCCMD_THROTTLE];
     mixerInput[MIXER_IN_STABILIZED_COLLECTIVE] = mixerInput[MIXER_IN_RCCMD_COLLECTIVE];
