@@ -184,12 +184,14 @@ void resetPidProfile(pidProfile_t *pidProfile)
     );
 }
 
+
 void pgResetFn_pidProfiles(pidProfile_t *pidProfiles)
 {
     for (int i = 0; i < PID_PROFILE_COUNT; i++) {
         resetPidProfile(&pidProfiles[i]);
     }
 }
+
 
 static void pidSetTargetLooptime(uint32_t pidLooptime)
 {
@@ -943,11 +945,13 @@ static void rotateVector(float v[XYZ_AXIS_COUNT], float rotation[XYZ_AXIS_COUNT]
 //      They do not rotate iTerm from the Z axis.
 // HF3D TODO:  What is the lag from calculation of PID components to the actuation of the servos / change in blade pitch during fast rotations?
 //      If the delay is significant, will the heli be in a slightly different z-axis orientation when the control output impacts flight?
-//      Should look-forward prediction be used to rotate the error compensation to where it will actually occur in time for all PID gains on Roll & Pitch axis?
+//      Should look-forward prediction be used to rotate the error compensation to where it will actually occur in time for all PID gains
+//      on Roll & Pitch axis?
 //      500 deg/s = 1 degree of rotation in 2ms.   dRonin measured response times are ~20ms.  So 10 degrees of rotation worst case?
 //      2000rpm headspeed = 33Hz rotation of blades, and gyroscopic precession means that inputs take 90-degrees of rotation to occur
-//        So worst case is that input determined while blade is at the point it needs to be controlled, rotates 90 degrees where CCPM mixing happens, then pitches 90 degrees later.
-//        Total lag of 180-degrees of rotation worst case = 15ms @ 2000rpm   (After servos have been commanded and started to actually move)
+//      So worst case is that input determined while blade is at the point it needs to be controlled, rotates 90 degrees where CCPM mixing happens,
+//      then pitches 90 degrees later.
+//      Total lag of 180-degrees of rotation worst case = 15ms @ 2000rpm   (After servos have been commanded and started to actually move)
 
 //   Absolute control was made to address the same attitude issues as iterm_rotation, but without some of the downsides.
 //   Absolute Control continuously measures the error of the quads path over stick input, properly rotated into the quads coordinate
@@ -1293,7 +1297,18 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
 				}
 				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
 				break;
-			case LEVEL_MODE_Y:
+			case LEVEL_MODE_P:
+				if (axis == FD_ROLL){
+					//currentPidSetpoint = 0.0f;
+					break;
+				}
+				if (axis == FD_YAW){
+					//currentPidSetpoint = 0.0f;
+					break;
+				}
+				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
+				break;
+			case LEVEL_MODE_Y://ANGLE_MODE
 				if (axis == FD_PITCH){
 					//currentPidSetpoint = 0.0f;
 					currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);

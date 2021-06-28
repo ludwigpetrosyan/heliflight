@@ -4386,6 +4386,45 @@ static void cliStatus(const char *cmdName, char *cmdline)
         cliPrintf(" %s", armingDisableFlagNames[bitpos]);
     }
     cliPrintLinefeed();
+
+    //add for debug
+    cliPrint("MOTORs");
+    cliPrintLinefeed();
+
+    for (int motorIndex = 0; motorIndex < MAX_SUPPORTED_MOTORS && motorIndex < motorCount; motorIndex++) {
+    	cliPrint("MOTOR NUM");
+    	cliPrintf(" %d", motorIndex);
+    	cliPrintLinefeed();
+    	//cliPrint("TAGSs:");
+    	//cliPrintLinefeed();
+    	//cliPrintf(" %d", motorIndex);
+    	//cliPrintf(" %d",  motorConfig->ioTags[motorIndex]);
+    	//cliPrintLinefeed();
+    	cliPrintf("Enabled:");
+    	cliPrintf(" %d", motors[motorIndex].enabled);
+    	cliPrintf(" %d", motorIsEnabled());
+    	cliPrintf(" %d", motorIsMotorEnabled(motorIndex));
+    	cliPrintLinefeed();
+    	cliPrintf("THROTTLE:");
+    	cliPrintf(" %d", motorConfig()->minthrottle);
+    	cliPrintf(" %d", motorConfig()->maxthrottle);
+    	cliPrintf(" %d", motorConfig()->mincommand);
+    	cliPrintLinefeed();
+    	cliPrintf("MOTOR DATA:");
+    	cliPrintf(" %d", motorConvertToExternal(motor[motorIndex]));
+    	cliPrintf(" %d", motorConvertToExternal(motorIndex));
+    	cliPrintf(" %d",(double) motor[motorIndex]);
+    	cliPrintLinefeed();
+    	cliPrintf("MOTOR LIMITS:");
+    	cliPrintf(" %d", (double)motorOutputLow);
+    	cliPrintf(" %d", (double)motorOutputHigh);
+    	cliPrintf(" %d", (double)motorOutputStop);
+    	cliPrintLinefeed();
+    	cliPrintf("MOTOR DISARMED STP:");
+    	cliPrintf(" %d", (double)motorOutputDisarmed[motorIndex]);
+    	cliPrintLinefeed();
+
+    }
 }
 
 #if defined(USE_TASK_STATISTICS)

@@ -24,6 +24,7 @@
 #include <math.h>
 
 #include "platform.h"
+#include "common/maths.h"
 
 #ifdef USE_PWM_OUTPUT
 
@@ -34,6 +35,8 @@
 #include "drivers/timer.h"
 
 #include "pg/motor.h"
+
+#include "rx/rx.h"
 
 FAST_RAM_ZERO_INIT pwmOutputPort_t motors[MAX_SUPPORTED_MOTORS];
 
@@ -168,6 +171,7 @@ static float pwmConvertFromExternal(uint16_t externalValue)
 
 static uint16_t pwmConvertToExternal(float motorValue)
 {
+	motorValue = constrain(motorValue, PWM_RANGE_MIN, PWM_RANGE_MAX);
     return (uint16_t)motorValue;
 }
 

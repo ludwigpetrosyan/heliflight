@@ -297,7 +297,7 @@ static uint8_t  cmsx_ff_boost;
 static uint8_t  cmsx_angleStrength;
 static uint8_t  cmsx_horizonStrength;
 static uint8_t  cmsx_horizonTransition;
-static int8_t   cmsx_autoProfileCellCount;
+//static int8_t   cmsx_autoProfileCellCount;
 
 #ifdef USE_ITERM_RELAX
 static uint8_t cmsx_iterm_relax;

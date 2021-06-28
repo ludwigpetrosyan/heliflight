@@ -36,6 +36,7 @@ extern float motorOutputLow;
 extern float motorOutputHigh;
 extern float motorOutputStop;
 extern float motorOutputRange;
+extern float motorOutputDisarmed[MAX_SUPPORTED_MOTORS];
 
 
 uint8_t getMotorCount(void);
