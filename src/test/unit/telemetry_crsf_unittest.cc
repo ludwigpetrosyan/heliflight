@@ -252,8 +252,8 @@ TEST(TelemetryCrsfTest, TestFlightMode)
     EXPECT_EQ(0, frame[7]);
     EXPECT_EQ(crfsCrc(frame, frameLen), frame[8]);
 
-    enableFlightMode(ANGLE_MODE);
-    EXPECT_EQ(ANGLE_MODE, FLIGHT_MODE(ANGLE_MODE));
+    enableFlightMode(FBL_MODE);
+    EXPECT_EQ(FBL_MODE, FLIGHT_MODE(FBL_MODE));
     frameLen = getCrsfFrame(frame, CRSF_FRAMETYPE_FLIGHT_MODE);
     EXPECT_EQ(5 + FRAME_HEADER_FOOTER_LEN, frameLen);
     EXPECT_EQ(CRSF_SYNC_BYTE, frame[0]); // address
@@ -266,7 +266,7 @@ TEST(TelemetryCrsfTest, TestFlightMode)
     EXPECT_EQ(0, frame[7]);
     EXPECT_EQ(crfsCrc(frame, frameLen), frame[8]);
 
-    disableFlightMode(ANGLE_MODE);
+    disableFlightMode(FBL_MODE);
     enableFlightMode(HORIZON_MODE);
     EXPECT_EQ(HORIZON_MODE, FLIGHT_MODE(HORIZON_MODE));
     frameLen = getCrsfFrame(frame, CRSF_FRAMETYPE_FLIGHT_MODE);

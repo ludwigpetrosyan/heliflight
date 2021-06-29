@@ -30,7 +30,8 @@ typedef enum {
     // ARM flag
     BOXARM = 0,
     // FLIGHT_MODE
-	BOXANGLE,
+	BOXFBL,
+	BOXFLYBAR,
     BOXRESCUE,
     BOXHORIZON,
     BOXPASSTHRU,

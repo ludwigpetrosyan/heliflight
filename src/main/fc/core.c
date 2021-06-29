@@ -166,7 +166,9 @@ static bool accNeedsCalibration(void)
             isModeActivationConditionPresent(BOXHORIZON) ||
             isModeActivationConditionPresent(BOXGPSRESCUE) ||
             isModeActivationConditionPresent(BOXCALIB) ||
-			isModeActivationConditionPresent(BOXANGLE) ||
+			//isModeActivationConditionPresent(BOXANGLE) ||
+			isModeActivationConditionPresent(BOXFBL) ||
+			isModeActivationConditionPresent(BOXFLYBAR) ||
             isModeActivationConditionPresent(BOXACROTRAINER)) {
 
             return true;
@@ -640,7 +642,9 @@ bool processRx(timeUs_t currentTimeUs)
     if (IS_RC_MODE_ACTIVE(BOXHORIZON) && canUseHorizonMode) {
 
         DISABLE_FLIGHT_MODE(RESCUE_MODE);
-        DISABLE_FLIGHT_MODE(ANGLE_MODE);
+        //DISABLE_FLIGHT_MODE(ANGLE_MODE);
+        DISABLE_FLIGHT_MODE(FBL_MODE);
+        DISABLE_FLIGHT_MODE(FLYBAR_MODE);
 
         if (!FLIGHT_MODE(HORIZON_MODE)) {
             ENABLE_FLIGHT_MODE(HORIZON_MODE);
@@ -649,17 +653,31 @@ bool processRx(timeUs_t currentTimeUs)
         DISABLE_FLIGHT_MODE(HORIZON_MODE);
     }
 
-    if (IS_RC_MODE_ACTIVE(BOXANGLE) && canUseAngleMode) {
+    if (IS_RC_MODE_ACTIVE(BOXFBL) && canUseAngleMode) {
 
             DISABLE_FLIGHT_MODE(RESCUE_MODE);
             DISABLE_FLIGHT_MODE(HORIZON_MODE);
+            DISABLE_FLIGHT_MODE(FLYBAR_MODE);
 
-            if (!FLIGHT_MODE(ANGLE_MODE)) {
-                ENABLE_FLIGHT_MODE(ANGLE_MODE);
+            if (!FLIGHT_MODE(FBL_MODE)) {
+                ENABLE_FLIGHT_MODE(FBL_MODE);
             }
         } else {
-            DISABLE_FLIGHT_MODE(ANGLE_MODE);
+            DISABLE_FLIGHT_MODE(FBL_MODE);
         }
+
+    if (IS_RC_MODE_ACTIVE(BOXFLYBAR) && canUseAngleMode) {
+
+                DISABLE_FLIGHT_MODE(RESCUE_MODE);
+                DISABLE_FLIGHT_MODE(HORIZON_MODE);
+                DISABLE_FLIGHT_MODE(FBL_MODE);
+
+                if (!FLIGHT_MODE(FLYBAR_MODE)) {
+                    ENABLE_FLIGHT_MODE(FLYBAR_MODE);
+                }
+            } else {
+                DISABLE_FLIGHT_MODE(FLYBAR_MODE);
+            }
 
 #ifdef USE_GPS_RESCUE
     if (ARMING_FLAG(ARMED) && (IS_RC_MODE_ACTIVE(BOXGPSRESCUE) || (failsafeIsActive() && failsafeConfig()->failsafe_procedure == FAILSAFE_PROCEDURE_GPS_RESCUE))) {
@@ -671,7 +689,7 @@ bool processRx(timeUs_t currentTimeUs)
     }
 #endif
 
-    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(ANGLE_MODE)) {
+    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(FBL_MODE) || FLIGHT_MODE(FLYBAR_MODE)) {
         LED1_ON;
         // increase frequency of attitude task to reduce drift when in angle or horizon mode
         rescheduleTask(TASK_ATTITUDE, TASK_PERIOD_HZ(500));

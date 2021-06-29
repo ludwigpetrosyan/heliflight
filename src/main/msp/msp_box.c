@@ -61,8 +61,9 @@ static const box_t boxes[CHECKBOX_ITEM_COUNT] = {
 //    { BOXGPSHOLD, "GPS HOLD", 11 },
     { BOXPASSTHRU, "PASSTHRU", 12 },
     { BOXBEEPERON, "BEEPER", 13 },
-    { BOXANGLE, "ANGLE", 14 },
-    { BOXLEDLOW, "LEDLOW", 15 },
+    { BOXFBL, "FBL", 14 },
+	{ BOXFLYBAR, "FLAYBAR", 15 },
+    { BOXLEDLOW, "LEDLOW", 16 },
 //    { BOXLLIGHTS, "LLIGHTS", 16 }, (removed)
     { BOXCALIB, "CALIB", 17 },
 //    { BOXGOV, "GOVERNOR", 18 }, (removed)
@@ -185,7 +186,8 @@ void initActiveBoxIds(void)
     if (sensors(SENSOR_ACC)) {
         BME(BOXRESCUE);
         BME(BOXHORIZON);
-        BME(BOXANGLE);
+        BME(BOXFBL);
+        BME(BOXFLYBAR);
     }
 
 #ifdef USE_GPS

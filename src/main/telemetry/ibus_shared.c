@@ -259,7 +259,10 @@ static uint16_t getMode()
     if (FLIGHT_MODE(RESCUE_MODE)) {
          flightMode = 0; //Stab
     }
-    if (FLIGHT_MODE(ANGLE_MODE)) {
+    if (FLIGHT_MODE(FBL_MODE)) {
+             flightMode = 0; //Stab
+        }
+    if (FLIGHT_MODE(FLYBAR_MODE)) {
              flightMode = 0; //Stab
         }
     if (FLIGHT_MODE(PASSTHRU_MODE)) {

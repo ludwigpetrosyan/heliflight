@@ -327,7 +327,7 @@ TEST(pidControllerTest, testPidLevel) {
     pidStabilisationState(PID_STABILISATION_ON);
 
     // Test Angle mode response
-    enableFlightMode(ANGLE_MODE);
+    enableFlightMode(FBL_MODE);
     float currentPidSetpoint = 30;
     rollAndPitchTrims_t angleTrim = { { 0, 0 } };
 
@@ -359,7 +359,7 @@ TEST(pidControllerTest, testPidLevel) {
     EXPECT_FLOAT_EQ(0, currentPidSetpoint);
 
     // Disable ANGLE_MODE
-    disableFlightMode(ANGLE_MODE);
+    disableFlightMode(FBL_MODE);
     currentPidSetpoint = pidLevel(FD_ROLL, pidProfile, &angleTrim, currentPidSetpoint);
     EXPECT_FLOAT_EQ(0, currentPidSetpoint);
     currentPidSetpoint = pidLevel(FD_PITCH, pidProfile, &angleTrim, currentPidSetpoint);

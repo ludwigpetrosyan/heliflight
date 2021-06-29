@@ -860,7 +860,7 @@ static FAST_CODE_NOINLINE float applyAcroTrainer(int axis, const rollAndPitchTri
 {
     float ret = setPoint;
 
-    if (!FLIGHT_MODE(RESCUE_MODE) && !FLIGHT_MODE(HORIZON_MODE) && !FLIGHT_MODE(GPS_RESCUE_MODE) && !FLIGHT_MODE(ANGLE_MODE)) {
+    if (!FLIGHT_MODE(RESCUE_MODE) && !FLIGHT_MODE(HORIZON_MODE) && !FLIGHT_MODE(GPS_RESCUE_MODE) && !FLIGHT_MODE(FBL_MODE)&& !FLIGHT_MODE(FLYBAR_MODE)) {
         bool resetIterm = false;
         float projectedAngle = 0;
         const int setpointSign = acroTrainerSign(setPoint);
@@ -1216,15 +1216,17 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
     //    levelMode = LEVEL_MODE_OFF;
     //}
 
-    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(ANGLE_MODE) || gpsRescueIsActive) {
+    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(FBL_MODE) || FLIGHT_MODE(FLYBAR_MODE) || gpsRescueIsActive) {
 		if(FLIGHT_MODE(RESCUE_MODE)){
 			levelMode = LEVEL_MODE_RSC;
 		} else if(FLIGHT_MODE(HORIZON_MODE)){
 			levelMode = LEVEL_MODE_RPY;
-		} else if(FLIGHT_MODE(ANGLE_MODE)){
+		} else if(FLIGHT_MODE(FBL_MODE)){
 			levelMode = LEVEL_MODE_Y;
 		} else if(gpsRescueIsActive){
 			levelMode = LEVEL_MODE_GRSC;
+		}else if(FLIGHT_MODE(FLYBAR_MODE)){
+			levelMode = LEVEL_MODE_Y;
 		}
 
     } else {
@@ -1291,7 +1293,7 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
 					//currentPidSetpoint = 0.0f;
 					break;
 				}
-				if (axis == FD_YAW){ //ANGLE_MODE
+				if (axis == FD_YAW){
 					//currentPidSetpoint = 0.0f;
 					break;
 				}
@@ -1308,7 +1310,7 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
 				}
 				currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
 				break;
-			case LEVEL_MODE_Y://ANGLE_MODE
+			case LEVEL_MODE_Y://FBL_MODE and FLYBAR_MODE
 				if (axis == FD_PITCH){
 					//currentPidSetpoint = 0.0f;
 					currentPidSetpoint = pidLevel(axis, pidProfile, angleTrim, currentPidSetpoint);
