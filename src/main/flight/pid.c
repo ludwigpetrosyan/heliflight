@@ -1216,25 +1216,17 @@ void FAST_CODE pidController(const pidProfile_t *pidProfile, timeUs_t currentTim
     //    levelMode = LEVEL_MODE_OFF;
     //}
 
-    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || FLIGHT_MODE(FBL_MODE) || FLIGHT_MODE(FLYBAR_MODE) || gpsRescueIsActive) {
+    if (FLIGHT_MODE(RESCUE_MODE) || FLIGHT_MODE(HORIZON_MODE) || gpsRescueIsActive) {
 		if(FLIGHT_MODE(RESCUE_MODE)){
 			levelMode = LEVEL_MODE_RSC;
 		} else if(FLIGHT_MODE(HORIZON_MODE)){
 			levelMode = LEVEL_MODE_RPY;
-		} else if(FLIGHT_MODE(FBL_MODE)){
-			levelMode = LEVEL_MODE_Y;
 		} else if(gpsRescueIsActive){
 			levelMode = LEVEL_MODE_GRSC;
-		}else if(FLIGHT_MODE(FLYBAR_MODE)){
-			levelMode = LEVEL_MODE_Y;
 		}
-
     } else {
 		levelMode = LEVEL_MODE_OFF;
 	}
-
-
-
 
     // Keep track of when we entered a self-level mode so that we can
     // add a guard time before crash recovery can activate.

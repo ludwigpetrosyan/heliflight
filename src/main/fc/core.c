@@ -625,12 +625,16 @@ bool processRx(timeUs_t currentTimeUs)
     }
 
     bool canUseHorizonMode = true;
-    bool canUseAngleMode = true;
+    bool canUseAngleMode   = true;
 
     if ((IS_RC_MODE_ACTIVE(BOXRESCUE) || failsafeIsActive()) && (sensors(SENSOR_ACC))) {
         // bumpless transfer to Level mode
         canUseHorizonMode = false;
         canUseAngleMode = false;
+
+        DISABLE_FLIGHT_MODE(HORIZON_MODE);
+        DISABLE_FLIGHT_MODE(FBL_MODE);
+        DISABLE_FLIGHT_MODE(FLYBAR_MODE);
 
         if (!FLIGHT_MODE(RESCUE_MODE)) {
             ENABLE_FLIGHT_MODE(RESCUE_MODE);
@@ -639,12 +643,18 @@ bool processRx(timeUs_t currentTimeUs)
         DISABLE_FLIGHT_MODE(RESCUE_MODE); // failsafe support
     }
 
+    if (IS_RC_MODE_ACTIVE(BOXPASSTHRU)) {
+            ENABLE_FLIGHT_MODE(PASSTHRU_MODE);
+        } else {
+            DISABLE_FLIGHT_MODE(PASSTHRU_MODE);
+    }
+
     if (IS_RC_MODE_ACTIVE(BOXHORIZON) && canUseHorizonMode) {
 
-        DISABLE_FLIGHT_MODE(RESCUE_MODE);
+        //DISABLE_FLIGHT_MODE(RESCUE_MODE);
         //DISABLE_FLIGHT_MODE(ANGLE_MODE);
-        DISABLE_FLIGHT_MODE(FBL_MODE);
-        DISABLE_FLIGHT_MODE(FLYBAR_MODE);
+        //DISABLE_FLIGHT_MODE(FBL_MODE);
+        //DISABLE_FLIGHT_MODE(FLYBAR_MODE);
 
         if (!FLIGHT_MODE(HORIZON_MODE)) {
             ENABLE_FLIGHT_MODE(HORIZON_MODE);
@@ -655,8 +665,8 @@ bool processRx(timeUs_t currentTimeUs)
 
     if (IS_RC_MODE_ACTIVE(BOXFBL) && canUseAngleMode) {
 
-            DISABLE_FLIGHT_MODE(RESCUE_MODE);
-            DISABLE_FLIGHT_MODE(HORIZON_MODE);
+            //DISABLE_FLIGHT_MODE(RESCUE_MODE);
+            //DISABLE_FLIGHT_MODE(HORIZON_MODE);
             DISABLE_FLIGHT_MODE(FLYBAR_MODE);
 
             if (!FLIGHT_MODE(FBL_MODE)) {
@@ -668,8 +678,8 @@ bool processRx(timeUs_t currentTimeUs)
 
     if (IS_RC_MODE_ACTIVE(BOXFLYBAR) && canUseAngleMode) {
 
-                DISABLE_FLIGHT_MODE(RESCUE_MODE);
-                DISABLE_FLIGHT_MODE(HORIZON_MODE);
+                //DISABLE_FLIGHT_MODE(RESCUE_MODE);
+                //DISABLE_FLIGHT_MODE(HORIZON_MODE);
                 DISABLE_FLIGHT_MODE(FBL_MODE);
 
                 if (!FLIGHT_MODE(FLYBAR_MODE)) {
@@ -702,11 +712,6 @@ bool processRx(timeUs_t currentTimeUs)
         DISABLE_ARMING_FLAG(WAS_ARMED_WITH_PREARM);
     }
 
-    if (IS_RC_MODE_ACTIVE(BOXPASSTHRU)) {
-        ENABLE_FLIGHT_MODE(PASSTHRU_MODE);
-    } else {
-        DISABLE_FLIGHT_MODE(PASSTHRU_MODE);
-    }
 
 #ifdef USE_TELEMETRY
     if (featureIsEnabled(FEATURE_TELEMETRY)) {
