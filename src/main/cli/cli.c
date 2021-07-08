@@ -4388,6 +4388,34 @@ static void cliStatus(const char *cmdName, char *cmdline)
     cliPrintLinefeed();
 
     //add for debug
+    cliPrint("BARO_CONFIG");
+    cliPrintLinefeed();
+    cliPrint("BARO BUS");
+    cliPrintf(" %d", barometerConfig()->baro_bustype);
+    cliPrintLinefeed();
+    cliPrint("BARO I2C ADDRESS");
+    cliPrintf(" %d", barometerConfig()->baro_i2c_address);
+    cliPrintLinefeed();
+    cliPrint("BARO I2C HRDWARE");
+    cliPrintf(" %d", barometerConfig()->baro_hardware);
+    cliPrintLinefeed();
+    cliPrint("BARO I2C HRDWARE");
+    cliPrintf(" %d", barometerConfig()->baro_i2c_device);
+    cliPrintLinefeed();
+
+    cliPrint("BARO");
+    cliPrintLinefeed();
+    cliPrint("BARO BUS");
+    cliPrintf(" %d", baro.dev.busdev.bustype);
+    cliPrintLinefeed();
+    cliPrint("BARO I2C ADDRESS");
+    cliPrintf(" %d", baro.dev.busdev.busdev_u.i2c.address);
+    cliPrintLinefeed();
+    cliPrint("BARO I2C HRDWARE");
+    cliPrintf(" %d", baro.dev.busdev.busdev_u.i2c.device);
+    cliPrintLinefeed();
+
+    //add for debug
     cliPrint("MOTORs");
     cliPrintLinefeed();
 
